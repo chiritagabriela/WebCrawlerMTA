@@ -82,7 +82,7 @@ public class PermissionManager implements PermissionManagerInterface {
                             isDisallowed = 1;
                         }
                         if (!token.equals("Disallow:") && isDisallowed == 1 && agent.equals("*")) {
-                            Permission permission = new Permission(token, false, delay);
+                            Permission permission = new Permission(token, delay);
                             this.permissionsList.add(permission);
                         }
                     }

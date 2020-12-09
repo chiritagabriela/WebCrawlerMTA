@@ -26,7 +26,7 @@ public class Permission{
     public void setUrl(String url) {
         this.url = url;
     }
-    
+
 
     public Integer getDelay() {
         return delay;
