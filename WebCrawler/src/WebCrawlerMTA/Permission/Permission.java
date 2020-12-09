@@ -12,12 +12,10 @@ import java.util.StringTokenizer;
 
 public class Permission{
     private String url;
-    private Boolean isAllowed = true;
     private Integer delay = 0;
 
-    public Permission(String url, Boolean isAllowed,Integer delay) {
+    public Permission(String url, Integer delay) {
         this.url = url;
-        this.isAllowed = isAllowed;
         this.delay = delay;
     }
 
@@ -28,14 +26,7 @@ public class Permission{
     public void setUrl(String url) {
         this.url = url;
     }
-
-    public Boolean getAllowed() {
-        return isAllowed;
-    }
-
-    public void setAllowed(Boolean allowed) {
-        isAllowed = allowed;
-    }
+    
 
     public Integer getDelay() {
         return delay;
