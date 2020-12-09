@@ -1,4 +1,4 @@
 package WebCrawlerMTA.Permission;
 
-public class Exemplu {
+public class Permission {
 }
