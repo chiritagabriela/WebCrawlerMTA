@@ -1,4 +1,4 @@
-package fileManager;
+package WebCrawlerMTA.FileManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,8 +13,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class Utils {
-
-    //returns value in KB/MB/GB of
+    /**
+     * Method ReadableFileSize returns value in KB/MB/GB of the file's size
+     * @param sizeBytes indicates the size of file as a long number
+     */
     public String ReadableFileSize(long sizeBytes) {
         long sizeKb = sizeBytes / 1024 + 1;
         long sizeMb = sizeKb / 1024;
@@ -30,7 +32,12 @@ public class Utils {
         return cntSize;
     }
 
-    //returns an array of Strings after data deserialization made by delimitator
+
+    /**
+     * Method SplitString returns an array of Strings after data deserialization
+     * @param delim indicates the delimitator according to which the data is deserialized
+     * @param property indicates the string we are deserializing
+     */
     public String[] SplitString(String delim, String property) {
         String[] propertyArray = new String[2];
         int i = 0;
@@ -41,7 +48,12 @@ public class Utils {
         return propertyArray;
     }
 
-    //returns value of Kb/Mb/Gb as integer
+
+    /**
+     * Method ConvertToKB returns returns value of MB/GB as KB
+     * @param unit indicates the unit of measurement(MB/GB)
+     * @param size indicates the size of measurement
+     */
     int ConvertToKB(final String unit, int size) {
         if (unit.equals("MB")) {
             size = size * 1024;
@@ -52,7 +64,11 @@ public class Utils {
         return size;
     }
 
-    //returns a String of the file time formatted as dd/MM/yyyy
+
+    /**
+     * Method FormatDateTime returns the file time formatted in a specific way
+     * @param fileTime indicates the file time which we have to format
+     */
     public String FormatDateTime(FileTime fileTime) {
 
         LocalDateTime localDateTime = fileTime
@@ -64,7 +80,11 @@ public class Utils {
                 DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 
-    //converts dateTime into Date type
+
+    /**
+     * Method ConvertToDate converts a date into Date type
+     * @param dateTime indicates date we are going to convert in a specific format
+     */
     public Date ConvertToDate(String dateTime) {
         try {
             Date date = new SimpleDateFormat("dd/MM/yyyy").parse(dateTime);
@@ -75,7 +95,12 @@ public class Utils {
         return null;
     }
 
-    //returns true if a file has extension or false if an extension doesn't exist
+
+    /**
+     * Method GetFileExtension returns true if a file has extension or false if an extension
+     * doesn't exist
+     * @param file indicates the file we will check if it has an extension or not
+     */
     public boolean GetFileExtension(File file) {
         String fileName = file.getName();
         if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
@@ -83,7 +108,14 @@ public class Utils {
         return false;
     }
 
-    //returns true if a str contains subString, ignoring case
+
+    /**
+     * Method ContainsIgnoreCase returns true if a string contains another substring
+     * or false if it doesn't, ignoring case
+     * doesn't exist
+     * @param str indicates the string we are checking
+     * @param subString indicates the string we are looking for
+     */
     public boolean ContainsIgnoreCase(String str, String subString) {
         return str.toLowerCase().contains(subString.toLowerCase());
     }

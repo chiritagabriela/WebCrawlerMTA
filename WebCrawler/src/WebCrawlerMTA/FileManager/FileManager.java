@@ -1,4 +1,4 @@
-package fileManager;
+package WebCrawlerMTA.FileManager;
 
 /**
  * Interface defining formal rules of the FileManager's interaction.
@@ -8,8 +8,11 @@ package fileManager;
  * @author Andrei Claudia
  */
 
-interface FileManager {
-
-    // interface method (does not have a body)
+public interface FileManager {
+    /**
+     * Method DoSpecificWork interface method (does not have a body)
+     * @param path indicates the path of folder whose files we are filtering
+     * @param property indicates the property according to which the filtering is performed
+     */
     public void DoSpecificWork(final String path, final String property);
 }

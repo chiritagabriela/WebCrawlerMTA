@@ -1,5 +1,4 @@
-package fileManager;
-
+package WebCrawlerMTA.FileManager;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -13,8 +12,11 @@ import java.util.Scanner;
  */
 
 public class Search implements FileManager {
-
-    //returns 1 if a word is found in a file, else returns 0
+    /**
+     * Method FileCrawler returns either if a specified word is found in a file or not
+     * @param file specifies specifies the file in which the word is searched
+     * @param searchWord indicates the word we are searching for
+     **/
     private final int FileCrawler(final File file,final String searchWord) {
         Scanner scanFile;
         try {
@@ -34,7 +36,12 @@ public class Search implements FileManager {
         return 0;
     }
 
-    //returns an ArrayList of Files if wordToSearch is found in file's name or in file's content
+
+    /**
+     * Method SearchString returns an ArrayList of files who contains a specified word
+     * @param path indicates the path of folder whose files we are filtering
+     * @param wordToSearch indicates the word we are searching for
+     **/
     private final ArrayList<File> SearchString(final String path, final String wordToSearch) {
         Utils utilComponent = new Utils();
         File directoryPath = new File(path);
@@ -47,7 +54,11 @@ public class Search implements FileManager {
         return filesToPrint;
     }
 
-    //use doSpecificWork method to provide specific implementation of method provided by super-class
+    /**
+     * Method DoSpecificWork provide specific implementation of method provided by super-class
+     * @param path indicates the path of folder whose files we are filtering
+     * @param property indicates the property according to which the filtering is performed
+     */
     @Override
     public void DoSpecificWork(final String path, final String property) {
 

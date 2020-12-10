@@ -1,5 +1,4 @@
-package fileManager;
-
+package WebCrawlerMTA.FileManager;
 import jdk.jshell.execution.Util;
 
 import java.io.File;
@@ -26,22 +25,36 @@ import java.util.Date;
  */
 
 public class Filter implements FileManager {
-    String filterProperty;
-    String filterValue;
+    /**
+     * Member description
+     */
+    private String filterProperty;
+    private String filterValue;
 
-    //constructor of the class
+    /**
+     * Filter class constructor
+     * Initializes the newly created object
+     */
     public Filter() {
         this.filterProperty = "";
         this.filterValue = "";
     }
 
-    //sets the properties of the filter
+    /**
+     * Method SetFilterProperties is used to set the properties of the filter
+     * @param filterProperty represents the value who has to be assigned to the object
+     * @param filterValue represents the value who has to be assigned to the object
+     */
     private void SetFilterProperties(String filterProperty, String filterValue) {
         this.filterProperty = filterProperty;
         this.filterValue = filterValue;
     }
 
-    //returns a FilenameFilter given an extension
+
+    /**
+     * Method FilterByType is used to list all files that satisfy the specified filter
+     * @param extension represents filter who has to be satisfied
+     */
     private FilenameFilter FilterByType(String extension) {
         FilenameFilter textFilefilter = new FilenameFilter() {
             public boolean accept(File dir, String name) {
@@ -56,7 +69,10 @@ public class Filter implements FileManager {
         return textFilefilter;
     }
 
-    //returns an ArrayList of Strings filtered by size, given a folder path
+    /**
+     * Method FilterBySize returns an ArrayList of Strings filtered by size
+     * @param path indicates the path of folder whose files we are filtering
+     */
     private ArrayList<String> FilterBySize(final String path) {
 
         ArrayList<String> fileToPrint = new ArrayList<String>();
@@ -82,7 +98,13 @@ public class Filter implements FileManager {
 
     }
 
-    //returns an ArrayList of Strings filtered by date, given a folder path and an array of files
+
+    /**
+     * Method FilterByDate returns an ArrayList of Strings, containing names of files,
+     * filtered by date
+     * @param files indicates the array of files we are filtering
+     * @param pathDirectory indicates the path of folder whose files we are filtering
+     */
     private ArrayList<String> FilterByDate(final File files[], final File pathDirectory) {
         Utils utilFunction = new Utils();
         ArrayList<String> fileToPrint = new ArrayList<String>();
@@ -106,7 +128,12 @@ public class Filter implements FileManager {
         return fileToPrint;
     }
 
-    //use doSpecificWork method to provide specific implementation of method provided by super-class
+
+    /**
+     * Method DoSpecificWork provide specific implementation of method provided by super-class
+     * @param path indicates the path of folder whose files we are filtering
+     * @param property indicates the property according to which the filtering is performed
+     */
     @Override
     public void DoSpecificWork(final String path, final String property) {
         Utils utilFunction = new Utils();
@@ -114,7 +141,6 @@ public class Filter implements FileManager {
         ArrayList<String> filesToPrint = new ArrayList<String>();
         SetFilterProperties(utilFunction.SplitString("#", property)[0], utilFunction.SplitString("#", property)[1]);
         switch (this.filterProperty) {
-
             case "type":
                 File directoryPath = new File(path);
                 FilenameFilter textFilefilter = FilterByType(this.filterValue);
@@ -136,7 +162,6 @@ public class Filter implements FileManager {
                 contor  = filesToPrint.size();
                 int size = Integer.parseInt(utilFunction.SplitString(" ", filterValue)[0]);
                 String SI = utilFunction.SplitString(" ", filterValue)[1].toUpperCase();
-
                 if (contor == 0)
                     System.out.println("Nu exista fisiere descarcate cu lungimea mai mica de " + size + " " + SI + "!");
                 else {
@@ -149,15 +174,14 @@ public class Filter implements FileManager {
             case "date":
                 File pathDirectory = new File(path);
                 File files[] = pathDirectory.listFiles();
-
                 filesToPrint = FilterByDate(files, pathDirectory);
                 contor = filesToPrint.size();
-
                 if (contor == 0)
                     System.out.println("Nu exista fisiere descarcate inainte de data " + this.filterValue + "!");
                 else
                     for (String fileToPrint : filesToPrint)
                         System.out.println("Fisierele descarcate inainte de " + this.filterValue + " sunt: "+fileToPrint);
+                break;
         }
     }
 }

@@ -1,4 +1,4 @@
-package fileManager;
+package WebCrawlerMTA.FileManager;
 
 /**
  * Class generating objects of concrete class based on given information
@@ -8,8 +8,11 @@ package fileManager;
  */
 
 public class FileManagerFactory {
-
-    //use GetAction method to get object of type FileManager
+    /**
+     * Method GetAction is used to get object of type FileManager based on
+     * user input and if the type doesn't exist, the method returns null.
+     * @param actionType represents the action entered by user in CLI
+     */
     public FileManager GetAction(String actionType) {
         if (actionType == null) {
             return null;
