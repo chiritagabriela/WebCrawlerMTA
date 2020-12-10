@@ -149,7 +149,6 @@ public class PermissionManager implements PermissionManagerInterface {
     public Boolean AllowedToCrawl(String url) {
 
         for(int i=0;i<this.permissionsList.size();i++) {
-            System.out.println(this.permissionsList.get(i).getUrl());
             if (this.permissionsList.get(i).getUrl().equals("/")) {
                 return false;
             }
@@ -162,5 +161,27 @@ public class PermissionManager implements PermissionManagerInterface {
             }
         }
         return true;
+    }
+
+    /**
+     * Method GetDelay
+     * Gets the delay for a specific url.
+     * @param url indicates the url from a site.
+     */
+    @Override
+    public Integer GetDelay(String url)
+    {
+        for(int i=0;i<this.permissionsList.size();i++) {
+            if (this.permissionsList.get(i).getUrl().equals("/")) {
+                return this.permissionsList.get(i).getDelay();
+            }
+        }
+        for(int i=0;i<this.permissionsList.size();i++) {
+            String regexUrl = GetRegex(this.permissionsList.get(i).getUrl());
+            if(url.matches(regexUrl)){
+                return this.permissionsList.get(i).getDelay();
+            }
+        }
+        return null;
     }
 }
