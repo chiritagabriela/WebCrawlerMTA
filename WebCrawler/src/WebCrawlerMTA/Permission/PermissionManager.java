@@ -9,14 +9,32 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-
+/**
+ * Class defining the management of permissions
+ * Permission manager builds a permission list and can say which link is disallowed from crawling.
+ * It also implements methods that are needed to called in PermissionManagerInterface.
+ *
+ * @author Chirita Gabriela
+ */
 public class PermissionManager implements PermissionManagerInterface {
+    /**
+     * Member description
+     */
     private List<Permission> permissionsList;
 
+    /**
+     * PermissionManager class constructor
+     * Initialisation of permission list.
+     */
     public PermissionManager() {
         this.permissionsList = new ArrayList<Permission>();
     }
 
+    /**
+     * Method IsFound
+     * @param charToFind indicates $ or * in order to be able to build a regex.
+     * @param url indicates the url from a permission.
+     */
     private Boolean IsFound(char charToFind, String url){
         for(int i=0;i<url.length();i++)
         {
@@ -26,7 +44,12 @@ public class PermissionManager implements PermissionManagerInterface {
         }
         return false;
     }
-
+    /**
+     * Method GetRegex
+     * Implements the conversion of a permission url
+     * into a regex expression in order to applied to a regex matcher.
+     * @param url indicates the url from a permission.
+     */
     private String GetRegex(String url)
     {
         if(IsFound('*',url)){
@@ -46,6 +69,13 @@ public class PermissionManager implements PermissionManagerInterface {
         return ".*" + url;
     }
 
+    /**
+     * Method GetPermissions
+     * gets the url that needs to be crawled and puts into permissionList the rules that need
+     * to be followed in order to crawl the url.If there is no file robots, the method returns null.
+     * Otherwise, it returns the list of permissions for that url.
+     * @param urlString indicates the url from a site.
+     */
     @Override
     public List<Permission> GetPermissions(String urlString) {
         this.permissionsList.clear();
@@ -110,11 +140,15 @@ public class PermissionManager implements PermissionManagerInterface {
         return this.permissionsList;
     }
 
+    /**
+     * Method AllowedToCrawl
+     * Verifies if an url can be crawled based on the permissionsList.
+     * @param url indicates the url from a site.
+     */
     @Override
     public Boolean AllowedToCrawl(String url) {
 
         for(int i=0;i<this.permissionsList.size();i++) {
-            System.out.println(this.permissionsList.get(i).getUrl());
             if (this.permissionsList.get(i).getUrl().equals("/")) {
                 return false;
             }
@@ -127,5 +161,27 @@ public class PermissionManager implements PermissionManagerInterface {
             }
         }
         return true;
+    }
+
+    /**
+     * Method GetDelay
+     * Gets the delay for a specific url.
+     * @param url indicates the url from a site.
+     */
+    @Override
+    public Integer GetDelay(String url)
+    {
+        for(int i=0;i<this.permissionsList.size();i++) {
+            if (this.permissionsList.get(i).getUrl().equals("/")) {
+                return this.permissionsList.get(i).getDelay();
+            }
+        }
+        for(int i=0;i<this.permissionsList.size();i++) {
+            String regexUrl = GetRegex(this.permissionsList.get(i).getUrl());
+            if(url.matches(regexUrl)){
+                return this.permissionsList.get(i).getDelay();
+            }
+        }
+        return null;
     }
 }

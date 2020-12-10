@@ -9,11 +9,26 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-
+/**
+ * Class defining structure of a permission
+ * A permission is an object that defines the url from robots.txt, path where crawler is
+ * not allowed to crawl.
+ *
+ * @author Chirita Gabriela
+ */
 public class Permission{
+    /**
+     * Member decription
+     */
     private String url;
     private Integer delay = 0;
 
+
+    /**
+     * Permission class constructor
+     * @param url The url that need to be crawled.
+     * @param delay Time that crawler needs to wait before crawling another link.
+     */
     public Permission(String url, Integer delay) {
         this.url = url;
         this.delay = delay;
