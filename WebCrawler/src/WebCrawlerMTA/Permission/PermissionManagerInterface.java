@@ -8,7 +8,7 @@ import java.util.List;
  * @author Chirita Gabriela
  */
 public interface PermissionManagerInterface {
-    public List<Permission> GetPermissions(String urlString);
+    public void GetPermissions(String urlString);
     public Boolean AllowedToCrawl(String url);
     public Integer GetDelay(String url);
 }
