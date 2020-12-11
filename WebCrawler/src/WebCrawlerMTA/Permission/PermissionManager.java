@@ -77,7 +77,7 @@ public class PermissionManager implements PermissionManagerInterface {
      * @param urlString indicates the url from a site.
      */
     @Override
-    public List<Permission> GetPermissions(String urlString) {
+    public void GetPermissions(String urlString) {
         this.permissionsList.clear();
         try {
             URL url = new URL(urlString);
@@ -137,7 +137,6 @@ public class PermissionManager implements PermissionManagerInterface {
         {
             System.out.println(e.getMessage());
         }
-        return this.permissionsList;
     }
 
     /**
