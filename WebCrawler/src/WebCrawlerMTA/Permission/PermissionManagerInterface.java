@@ -10,4 +10,5 @@ import java.util.List;
 public interface PermissionManagerInterface {
     public void GetPermissions(String urlString);
     public Boolean AllowedToCrawl(String url);
+    public Integer GetDelay(String url);
 }
