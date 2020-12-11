@@ -16,14 +16,14 @@ public class Config implements Logger {
 
     /**
      * Implementing Logger interface methods
-     * @param fileName represents the file name where you want to write
+     *
      * @param message  represents the message that you want to write in file.
      */
 
-    public  void LoggerInfo(String fileName, String message)
+    public  void LoggerInfo(String message)
     {
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDateTime timeNow = LocalDateTime.now();
         /**
          * timeNow - represents the Time and Date
@@ -33,19 +33,20 @@ public class Config implements Logger {
         try {
 
             // Open given file in append mode.
-            BufferedWriter out = new BufferedWriter(new FileWriter(fileName, true));
+            BufferedWriter out = new BufferedWriter(new FileWriter("resources/logger.txt", true));
 
             //add date and time in file
-            out.write("\n");
             out.write(String.valueOf(timeNow));
+            out.write(" ");
+            out.write("[CONFIG]:");
             //add Message in file
-            out.write("\n");
             out.write(message);
+            out.write("\n");
 
             out.close();
         }
         catch (IOException e) {
-            System.out.println("exception occoured" + e);
+            System.out.println(e);
         }
     }
 }

@@ -1,6 +1,7 @@
 package WebCrawlerMTA.Recursion;
 
 
+import WebCrawlerMTA.FileManager.Utils;
 import WebCrawlerMTA.InputData.InputData;
 import WebCrawlerMTA.Permission.PermissionManager;
 import WebCrawlerMTA.Permission.PermissionManagerInterface;
@@ -17,6 +18,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Class implementing the parsing and downloading of all sites
@@ -32,26 +34,24 @@ public class Recursion {
      */
 
     private static Integer threadsNumber;
-    private static Integer delay;
+    private static String delay;
     private static String directoryPath;
     private static Integer depth;
     public static List<String> urlsList;
     private static Recursion recursion_instance = null;
-    private static Integer dimensionLimit;
-    private static String specificExtension;
+    private static String typeLimit;
 
     /**
      * Recursion class constructor
-     * @param inputData - datas that are extracted from the configuration file
+     * @param inputData - data that is extracted from the configuration file
      */
     private Recursion(InputData inputData) {
-        threadsNumber = Integer.parseInt(inputData.GetNoThreads());
-        delay = Integer.parseInt(inputData.GetDelay());
-        directoryPath = inputData.GetRootDir();
-        depth = Integer.parseInt(inputData.GetLogLevel());
-        urlsList = inputData.GetListOfURLs();
-        //dimensionLimit = Getter();
-        //specificExtension= Getter();
+        threadsNumber = inputData.getThreadsNumber();
+        delay = inputData.getDelay();
+        directoryPath = inputData.getDirectoryPath();
+        depth = inputData.getDepth();
+        urlsList = inputData.getUrlsList();
+        typeLimit= inputData.getTypeToCrawl();
     }
 
 
@@ -85,15 +85,14 @@ public class Recursion {
             // System.out.println(result);
 
         } catch (MalformedURLException e) {
-            System.out.println("Internet is not connected");
-            System.out.println(urlString);
-            System.out.println(e.getCause());
+            //System.out.println("Internet is not connected");
+           // System.out.println(e.getCause());
             //logger + eroare e.getMessage()
         } catch (IOException e) {
-            System.out.println("Internet is not connected");
+            //System.out.println("Internet is not connected");
             //logger + eroare e.getMessage()
-            System.out.println(urlString);
-            System.out.println(e.getCause());
+
+            //System.out.println(e.getCause());
         }
         return result;
     }
@@ -117,7 +116,6 @@ public class Recursion {
 
     public static void Run()
     {
-        System.out.println(threadsNumber);
         List<Thread> threads= new ArrayList<>();
         for(int i=0;i<threadsNumber;i++)
         {
@@ -150,7 +148,7 @@ public class Recursion {
         StringTokenizer tokenizer2 = new StringTokenizer(url, "//");
         while (tokenizer2.hasMoreElements()) {
             String token = tokenizer2.nextToken();
-            System.out.println(token);
+
             pos++;
             if(pos != 1) {
                 directory = directory + "/" + token;
@@ -161,6 +159,30 @@ public class Recursion {
             }
         }
         return directory;
+    }
+
+    /**
+     * This method is used to verify the type of a file
+     * @param url is the path of an object
+     * @return the extension of an object
+     */
+    private static String GetExtension(String url)
+    {
+        String result = "";
+        String finalResult = "";
+        for(int i=url.length()-1;i>0;i--)
+        {
+            if(url.charAt(i)=='.')
+            {
+                break;
+            }
+            result += url.charAt(i);
+        }
+        for(int i=result.length()-1;i>=0;i--)
+        {
+            finalResult+=result.charAt(i);
+        }
+        return finalResult;
     }
 
     /**
@@ -187,29 +209,6 @@ public class Recursion {
         }
     }
 
-    /**
-     * This method is used to verify the type of a file
-     * @param url is the path of an object
-     * @return the extension of an object
-     */
-    private static String GetExtension(String url)
-    {
-        String result= new String();
-        String finalResult = new String();
-        for(int i=url.length();i>0;i--)
-        {
-            if(url.charAt(i)=='.')
-            {
-                break;
-            }
-            result += url.charAt(i);
-        }
-        for(int i=result.length();i>=0;i--)
-        {
-            finalResult+=result.charAt(i);
-        }
-        return finalResult;
-    }
 
     /**
      * This method is used to download some elements of a site
@@ -218,29 +217,44 @@ public class Recursion {
 
     private static void DownloadPage(String url)
     {
-        try (
-                /*
-                if(GetExtension(url)==specificExtension)
-                {
-                    if(GetFileSize(url)<dimensionLimit)
-                    {
+        Utils utils = new Utils();
 
+        if(!typeLimit.isEmpty())
+        {
+            if(GetExtension(url).matches(typeLimit)){
+                try {
+                    BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
+                    int pos = url.indexOf("/");
+                    FileOutputStream fileOutputStream =
+                            new FileOutputStream(directoryPath+url.substring(pos+1));
+                    System.out.println(directoryPath+url.substring(pos+1));
+                    byte[] dataBuffer = new byte[1024];
+                    int bytesRead;
+                    while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+                        fileOutputStream.write(dataBuffer, 0, bytesRead);
                     }
+                } catch (IOException e) {
+                    //System.out.println(e.getCause());
                 }
-                 */
-
-                BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
-                FileOutputStream fileOutputStream = new FileOutputStream(directoryPath+url)) {
-            byte dataBuffer[] = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
-                fileOutputStream.write(dataBuffer, 0, bytesRead);
             }
-        } catch (IOException e) {
-            System.out.println(e.getCause());
+        }
+        else{
+            try {
+                BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
+                int pos = url.indexOf("/");
+                FileOutputStream fileOutputStream =
+                        new FileOutputStream(directoryPath+url.substring(pos+1));
+                System.out.println(directoryPath+url.substring(pos+1));
+                byte[] dataBuffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+                    fileOutputStream.write(dataBuffer, 0, bytesRead);
+                }
+            } catch (IOException e) {
+                //System.out.println(e.getCause());
+            }
         }
     }
-
 
     /**
      * This method is used to access all sites of a page
@@ -283,23 +297,27 @@ public class Recursion {
                 {
                     if(permissionManagerInterface.AllowedToCrawl(newURL))
                     {
-                        /*
-                        int delay1= delay;
-                        if(permissionManagerInterface.GetDelay(newURL))
+                        int delayToSleep = Integer.parseInt(delay.substring(0,delay.length()-2));
+                        if(permissionManagerInterface.GetDelay(newURL) != null)
                         {
-                            delay1=permissionManagerInterface
+                            delayToSleep = permissionManagerInterface.GetDelay(newURL);
                         }
-                        wait(delay1);
-                         */
+                        try {
+                            TimeUnit.SECONDS.sleep(delayToSleep/1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
                         try {
                             Path path = Paths.get(directoryPath + GetDirectory(newURL));
                             Files.createDirectories(path);
                             DownloadPage(newURL);
+
                             //System.out.println("Directory is created!");
 
                         } catch (IOException e) {
 
-                            System.err.println("Failed to create directory!" + e.getMessage());
+                            //System.err.println("Failed to create directory!" + e.getMessage());
 
                         }
                     }

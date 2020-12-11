@@ -83,7 +83,7 @@ public class PermissionManager implements PermissionManagerInterface {
             URL url = new URL(urlString);
             URLConnection connection = url.openConnection();
             connection.connect();
-            System.out.println("Internet is connected");
+            //System.out.println("Internet is connected");
             try {
                 BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
                 String str;
@@ -106,7 +106,7 @@ public class PermissionManager implements PermissionManagerInterface {
                             isDelay = 1;
                         }
                         if (!token.equals("Crawl-delay:") && isDelay == 1) {
-                            delay = Integer.parseInt(token);
+                            delay = Integer.parseInt(token.substring(0,token.length()-2));
                         }
                         if (token.equals("Disallow:")) {
                             isDisallowed = 1;
@@ -121,21 +121,21 @@ public class PermissionManager implements PermissionManagerInterface {
             }
             catch (MalformedURLException e)
             {
-                System.out.println(e.getMessage());
+               // System.out.println(e.getMessage());
             }
             catch (IOException e)
             {
-                System.out.println(e.getMessage());
+                //System.out.println(e.getMessage());
             }
 
         }
         catch (MalformedURLException e)
         {
-            System.out.println(e.getMessage());
+           // System.out.println(e.getMessage());
         }
         catch (IOException e)
         {
-            System.out.println(e.getMessage());
+           // System.out.println(e.getMessage());
         }
     }
 

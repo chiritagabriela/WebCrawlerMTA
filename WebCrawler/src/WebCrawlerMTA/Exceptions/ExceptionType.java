@@ -6,5 +6,5 @@ package WebCrawlerMTA.Exceptions;
  */
 
 public enum ExceptionType {
-    FileNotFound, FileNotOpened
+    ArgumentsNotCorrect, NoArgumentsGiven
 }

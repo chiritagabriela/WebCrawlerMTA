@@ -44,7 +44,7 @@ public class MyThread implements Runnable{
            // System.out.println("Sunt thread-ul " + id + " start=" + start + " end=" + end);
             for(int i=start;i<end;i++)
             {
-                System.out.println(i);
+
                 Recursion.GoRecursion(0, i, list);
               //  System.out.println("Am terminat, semnat threadul: "+ id);
             }

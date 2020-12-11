@@ -54,7 +54,7 @@ public class Utils {
      * @param unit indicates the unit of measurement(MB/GB)
      * @param size indicates the size of measurement
      */
-    int ConvertToKB(final String unit, int size) {
+    public int ConvertToKB(final String unit, int size) {
         if (unit.equals("MB")) {
             size = size * 1024;
         }

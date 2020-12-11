@@ -6,7 +6,7 @@ import java.util.*;
 
 
 /**
- * Class implementing SiteMap component
+ * Class implementing InputData component
  *
  * @author Diana Merches
  */
@@ -20,7 +20,6 @@ public class InputData {
     private String directoryPath;
     private Integer logLevel;
     private List<String> urlsList;
-    private Integer dimensionToCrawl;
     private String typeToCrawl;
     private Integer depth;
 
@@ -73,7 +72,7 @@ public class InputData {
                 this.logLevel = Integer.parseInt(result[1]);
                 break;
             }
-            if(result[0].equals("type"))
+            if(result[0].equals("type_to_crawl"))
             {
                 this.typeToCrawl = result[1];
                 break;
@@ -179,14 +178,10 @@ public class InputData {
                             String[] result = myReader.nextLine().split("=");
                             this.SetPropertyValue(result);
                         }
-                        if (step == 6) {
-                            String[] result = myReader.nextLine().split("=");
-                            this.SetPropertyValue(result);
-                        }
                         step++;
                     }
                     myReader.close();
-                    if(step < 6)
+                    if(step < 4)
                     {
                         //error
                         return null;
@@ -299,21 +294,6 @@ public class InputData {
      */
     public void setUrlsList(List<String> urlsList) {
         this.urlsList = urlsList;
-    }
-
-    /**
-     *Method getDimensionToCrawl is used to return dimension to crawl
-     */
-    public Integer getDimensionToCrawl() {
-        return dimensionToCrawl;
-    }
-
-    /**
-     *Method setDimensionToCrawl
-     * @param dimensionToCrawl indicates dimension to crawl
-     */
-    public void setDimensionToCrawl(Integer dimensionToCrawl) {
-        this.dimensionToCrawl = dimensionToCrawl;
     }
 
     /**
