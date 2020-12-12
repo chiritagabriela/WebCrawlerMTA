@@ -1,4 +1,7 @@
 package WebCrawlerMTA.FileManager;
+import WebCrawlerMTA.Logger.Info;
+import WebCrawlerMTA.Logger.Logger;
+import WebCrawlerMTA.Logger.Warn;
 import jdk.jshell.execution.Util;
 
 import java.io.File;
@@ -78,6 +81,7 @@ public class Filter implements FileManager {
         this.allFoldersFiles.clear();
         this.GetAllFiles(path, this.allFoldersFiles);
         ArrayList<String> filesToList = new ArrayList<String>();
+
         //List of all the text files
         for (int i = 0; i < this.allFoldersFiles.size(); i++) {
             String fileWithPath = allFoldersFiles.get(i).getAbsolutePath().toLowerCase();
@@ -94,7 +98,7 @@ public class Filter implements FileManager {
      */
     private ArrayList<String> FilterBySize(final String path) {
 
-        ArrayList<String> fileToPrint = new ArrayList<String>();
+        ArrayList<String> fileToPrint = new ArrayList();
         int size;
         String SI;
         Utils utilFunction = new Utils();
@@ -142,7 +146,9 @@ public class Filter implements FileManager {
                 }
             }
         } catch (IOException ex) {
-            System.out.println("Fisierul nu exista");
+            System.out.println("File does not exist for filtering date.");
+            Logger logger = new Warn();
+            logger.LoggerInfo("File does not exist for filtering date.");
         }
         return fileToPrint;
     }
@@ -157,13 +163,16 @@ public class Filter implements FileManager {
     public void DoSpecificWork(final String path, final String property) {
         Utils utilFunction = new Utils();
         int contor = 0;
+        Logger logger = new Info();
         ArrayList<String> filesToPrint = new ArrayList<String>();
         SetFilterProperties(utilFunction.SplitString("#", property)[0], utilFunction.SplitString("#", property)[1]);
         switch (this.filterProperty) {
             case "type":
                 ArrayList<String> filesToList = this.FilterByType(path,this.filterValue);
-                if (filesToList.size() == 0)
-                    System.out.println("There are no files with the specified extension " + this.filterValue + "!");
+                if (filesToList.size() == 0) {
+                    System.out.println("There are no files with the specified extension " + this.filterValue + ".");
+                    logger.LoggerInfo("No files with specified extension.");
+                }
                 else {
                     System.out.println("List of the " + this.filterValue + " files in the specified directory:");
                     for (String fileName : filesToList) {
@@ -177,10 +186,12 @@ public class Filter implements FileManager {
                 contor  = filesToPrint.size();
                 int size = Integer.parseInt(utilFunction.SplitString(" ", filterValue)[0]);
                 String SI = utilFunction.SplitString(" ", filterValue)[1].toUpperCase();
-                if (contor == 0)
-                    System.out.println("Nu exista fisiere descarcate cu lungimea mai mica de " + size + " " + SI + "!");
+                if (contor == 0) {
+                    System.out.println("There is no file with dimension less than " + size + " " + SI + ".");
+                    logger.LoggerInfo("There is no file with dimension last than " + size + " " + SI + ".");
+                }
                 else {
-                    System.out.println("Fisierele cu lungime mai mica de " + size + " " + SI + " sunt: ");
+                    System.out.println("Files with dimension less than " + size + " " + SI + " are: ");
                     for (String fileToPrint : filesToPrint)
                         System.out.println(fileToPrint);
                 }
@@ -189,11 +200,13 @@ public class Filter implements FileManager {
             case "date":
                 filesToPrint = FilterByDate(path);
                 contor = filesToPrint.size();
-                if (contor == 0)
-                    System.out.println("Nu exista fisiere descarcate inainte de data " + this.filterValue + "!");
+                if (contor == 0) {
+                    System.out.println("No file downloaded before " + this.filterValue + ".");
+                    logger.LoggerInfo("No file found downloaded at specific date.");
+                }
                 else
                     for (String fileToPrint : filesToPrint)
-                        System.out.println("Fisierele descarcate inainte de " + this.filterValue + " sunt: "+fileToPrint);
+                        System.out.println("Files downloaded before " + this.filterValue + " are: "+fileToPrint);
                 break;
         }
     }

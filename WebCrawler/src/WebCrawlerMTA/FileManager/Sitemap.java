@@ -1,5 +1,8 @@
 package WebCrawlerMTA.FileManager;
 
+import WebCrawlerMTA.Logger.Logger;
+import WebCrawlerMTA.Logger.Warn;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -64,7 +67,9 @@ public class Sitemap implements FileManager {
             ListFoldersFiles(path,0);
             printWriter.close();
         } catch (IOException ex) {
-            System.out.println("Probleme la deschiderea fisierului!");
+            System.out.println("File not found for sitemap.");
+            Logger logger = new Warn();
+            logger.LoggerInfo("File not found for sitemap.");
         }
     }
 }

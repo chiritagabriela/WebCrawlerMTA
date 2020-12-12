@@ -1,5 +1,9 @@
 package WebCrawlerMTA.Recursion;
 
+import WebCrawlerMTA.Logger.Info;
+import WebCrawlerMTA.Logger.Logger;
+import WebCrawlerMTA.Logger.Severe;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,20 +42,18 @@ public class MyThread implements Runnable{
     {
         try
         {
-
             int start = Math.round(id * numberMax/noThread);
             int end = Math.round((id+1) * numberMax/noThread) ;
-           // System.out.println("Sunt thread-ul " + id + " start=" + start + " end=" + end);
             for(int i=start;i<end;i++)
             {
-
                 Recursion.GoRecursion(0, i, list);
-              //  System.out.println("Am terminat, semnat threadul: "+ id);
             }
         }
         catch (Exception e)
         {
-
+            System.out.println(e.getMessage());
+            Logger logger = new Severe();
+            logger.LoggerInfo(e.getMessage());
         }
     }
 }

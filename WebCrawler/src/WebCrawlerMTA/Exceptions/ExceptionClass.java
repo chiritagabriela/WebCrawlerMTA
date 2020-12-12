@@ -35,6 +35,25 @@ public class ExceptionClass implements Exception {
                 System.out.println(message);
                 break;
             }
+            case CnfNotCrawled:   {
+
+                this.message = "Config file was not set.";
+                System.out.println(message);
+                break;
+            }
+
+            case TxtNotCrawled:   {
+
+                this.message = "Sites were not crawled.";
+                System.out.println(message);
+                break;
+            }
+            case CnfFileIncorrect:   {
+
+                this.message = "Config file is incorrect.";
+                System.out.println(message);
+                break;
+            }
 
 
         }

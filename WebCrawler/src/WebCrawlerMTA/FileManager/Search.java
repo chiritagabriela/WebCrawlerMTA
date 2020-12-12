@@ -1,4 +1,8 @@
 package WebCrawlerMTA.FileManager;
+import WebCrawlerMTA.Logger.Info;
+import WebCrawlerMTA.Logger.Logger;
+import WebCrawlerMTA.Logger.Warn;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -32,6 +36,7 @@ public class Search implements FileManager {
      **/
     private final int FileCrawler(final File file,final String searchWord) {
         Scanner scanFile;
+        Logger logger = new Warn();
         try {
             scanFile = new Scanner(file);
             if (null != scanFile.findWithinHorizon(searchWord, 0))
@@ -42,8 +47,8 @@ public class Search implements FileManager {
             scanFile.close();
             return 0;
         } catch (FileNotFoundException e) {
-            System.err.println("Fisierul nu exista!!");
-            e.printStackTrace();
+            System.out.println("Searched file does not exist.");
+            logger.LoggerInfo("Searched file not found.");
         }
 
         return 0;

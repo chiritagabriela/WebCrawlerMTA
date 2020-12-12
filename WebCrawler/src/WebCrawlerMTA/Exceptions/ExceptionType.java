@@ -6,5 +6,5 @@ package WebCrawlerMTA.Exceptions;
  */
 
 public enum ExceptionType {
-    ArgumentsNotCorrect, NoArgumentsGiven
+    ArgumentsNotCorrect, NoArgumentsGiven, CnfNotCrawled, TxtNotCrawled, CnfFileIncorrect
 }

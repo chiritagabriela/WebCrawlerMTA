@@ -1,5 +1,13 @@
 package WebCrawlerMTA.InputData;
 
+import WebCrawlerMTA.Exceptions.Exception;
+import WebCrawlerMTA.Exceptions.ExceptionClass;
+import WebCrawlerMTA.Exceptions.ExceptionType;
+import WebCrawlerMTA.Logger.Config;
+import WebCrawlerMTA.Logger.Logger;
+import WebCrawlerMTA.Logger.Severe;
+import WebCrawlerMTA.Logger.Warn;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -88,67 +96,61 @@ public class InputData {
     /**
      *Method GetCommand is used to get commands line and compose the string wich will be serialized
      */
-    public String GetCommand(String[] args){
+    public String GetCommand(String[] args) {
         String command = "";
-        int isOkCommand;
-        if(args[0].equals("filter")){
-            isOkCommand = 1;
+        Exception exception = new ExceptionClass();
+        Logger loggerWarn = new Warn();
+        Logger loggerSevere = new Severe();
+        Logger loggerConfig = new Config();
+
+        if (args[0].toLowerCase().equals("filter")) {
             int isOkForFilter = 0;
 
-            if(args.length < 3 || args.length > 4)
-            {
-                //error
+            if (args.length < 3 || args.length > 4) {
+                exception.ExceptionMethod(ExceptionType.ArgumentsNotCorrect);
+                loggerWarn.LoggerInfo("Arguments not correct.");
                 return null;
             }
-
-            command = command + args[0] + " ";
-            if(args[1].equals("size")){
-                command = command + args[1] + "#" + args[2] + " " + args[3];
+            command = command + args[0].toLowerCase() + " ";
+            if (args[1].toLowerCase().equals("size")) {
+                command = command + args[1].toLowerCase() + "#" + args[2].toLowerCase() + " " + args[3].toLowerCase();
                 isOkForFilter = 1;
             }
-            if(args[1].equals("type")){
-                command = command + args[1] + "#" + args[2];
+            if (args[1].toLowerCase().equals("type")) {
+                command = command + args[1].toLowerCase() + "#" + args[2].toLowerCase();
                 isOkForFilter = 1;
-                return command;
             }
-            if(args[1].equals("date")){
-                command = command + args[1] + "#" + args[2];
+            if (args[1].toLowerCase().equals("date")) {
+                command = command + args[1].toLowerCase() + "#" + args[2].toLowerCase();
                 isOkForFilter = 1;
-                return command;
             }
-            if(isOkForFilter == 0)
-            {
-                //error
+            if (isOkForFilter == 0) {
+                exception.ExceptionMethod(ExceptionType.ArgumentsNotCorrect);
+                loggerWarn.LoggerInfo("Arguments not correct.");
                 return null;
-            }
-            else
-            {
+            } else {
                 return command;
             }
         }
-        if(args[0].equals("search"))
-        {
-            if(args.length == 1)
-            {
-                //error
+        if (args[0].toLowerCase().equals("search")) {
+            if (args.length == 1) {
+                exception.ExceptionMethod(ExceptionType.ArgumentsNotCorrect);
+                loggerWarn.LoggerInfo("Arguments not correct.");
                 return null;
             }
-            isOkCommand = 1;
-            command = args[0] + " " + args[1];
+            command = args[0].toLowerCase() + " " + args[1].toLowerCase();
             return command;
         }
-        if(args[0].equals("crawl"))
-        {
-            isOkCommand = 1;
-            if(args.length < 2)
-            {
-                //error
+        if (args[0].toLowerCase().equals("crawl")) {
+
+            if (args.length < 2) {
+                exception.ExceptionMethod(ExceptionType.ArgumentsNotCorrect);
+                loggerWarn.LoggerInfo("Arguments not correct.");
                 return null;
             }
-            if(GetExtension(args[1]).equals("cnf"))
-            {
+            if (GetExtension(args[1].toLowerCase()).equals("cnf")) {
                 try {
-                    File filename = new File(args[1]);
+                    File filename = new File(args[1].toLowerCase());
                     Scanner myReader = new Scanner(filename);
                     int step = 0;
                     while (myReader.hasNextLine()) {
@@ -181,25 +183,23 @@ public class InputData {
                         step++;
                     }
                     myReader.close();
-                    if(step < 4)
-                    {
-                        //error
+                    if (step < 4) {
+                        exception.ExceptionMethod(ExceptionType.CnfFileIncorrect);
+                        loggerConfig.LoggerInfo("Config file is incorrect.");
                         return null;
-                    }
-                    else
-                    {
+                    } else {
                         return "crawl cnf ok";
                     }
                 } catch (FileNotFoundException e) {
-                    //System.out.println("An error occurred.");
-                    e.printStackTrace();
+                    System.out.println(e.getMessage());
+                    loggerSevere.LoggerInfo(e.getMessage());
                 }
 
             }
-            if(GetExtension(args[1]).equals("txt")){
+            if (GetExtension(args[1].toLowerCase()).equals("txt")) {
                 int isOkForTxt = 0;
                 try {
-                    File filename = new File(args[1]);
+                    File filename = new File(args[1].toLowerCase());
                     Scanner myReader = new Scanner(filename);
                     while (myReader.hasNextLine()) {
                         String url = myReader.nextLine();
@@ -208,18 +208,66 @@ public class InputData {
                     }
                     myReader.close();
                 } catch (FileNotFoundException e) {
-                    //System.out.println("An error occurred.");
-                    e.printStackTrace();
+                    System.out.println(e.getMessage());
+                    loggerSevere.LoggerInfo(e.getMessage());
                 }
-                if(isOkForTxt == 1)
-                {
-                    return "crawl txt is ok";
+                if (isOkForTxt == 1) {
+                    return "crawl txt ok";
+                }
+                else{
+                    exception.ExceptionMethod(ExceptionType.ArgumentsNotCorrect);
+                    loggerWarn.LoggerInfo("Arguments not correct.");
+                    return null;
                 }
             }
         }
+        if (args[0].toLowerCase().matches("search")) {
+            if (args[1].isEmpty()) {
+                exception.ExceptionMethod(ExceptionType.ArgumentsNotCorrect);
+                loggerWarn.LoggerInfo("Arguments not correct.");
+                return null;
+            } else {
+                return args[0].toLowerCase() + " " + args[1].toLowerCase();
+            }
+        }
+        if (args[0].toLowerCase().matches("sitemap")) {
+            if (args[1].isEmpty()) {
+                exception.ExceptionMethod(ExceptionType.ArgumentsNotCorrect);
+                loggerWarn.LoggerInfo("Arguments not correct.");
+                return null;
+            } else {
+                return args[0].toLowerCase() + " " + args[1].toLowerCase();
+            }
+        }
+        exception.ExceptionMethod(ExceptionType.ArgumentsNotCorrect);
+        loggerWarn.LoggerInfo("Arguments not correct.");
         return null;
     }
 
+    /**
+     *Method PrintMenu is used to print the menu
+     */
+    public void PrintMenu(){
+        System.out.println("WELCOME TO WEBCRAWLER-MTA");
+        System.out.println("In order to use the application you have the following possibilities:");
+        System.out.println("[1]-->Crawling configuration file:crawl config.cnf");
+        System.out.println("[2]-->Crawling sites from a given input file:crawl input.txt");
+        System.out.println("[3]-->Crawling sites from a given input file with a specified type:crawl input.txt type png");
+        System.out.println("[4]-->Filter downloaded sites by type:filter type png");
+        System.out.println("[5]-->Filter downloaded sites by date:filter date zz/mm/yyyy");
+        System.out.println("[6]-->Filter downloaded sites by dimension:filter size 150 kb");
+        System.out.println("[7]-->Create sitemap in an output file:sitemap sitemap.txt");
+        System.out.println("[8]-->Search word in all the downloaded files:search word");
+        System.out.println("[9]-->Exit:exit");
+    }
+
+    public String[] TakeCommand()
+    {
+        Scanner console = new Scanner(System.in);
+        String command = console.nextLine();
+        String[] result = command.split(" ");
+        return result;
+    }
     /**
      *Method getThreadsNumber is used to return number of threads
      */

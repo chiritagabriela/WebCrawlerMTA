@@ -3,6 +3,9 @@ package WebCrawlerMTA.Recursion;
 
 import WebCrawlerMTA.FileManager.Utils;
 import WebCrawlerMTA.InputData.InputData;
+import WebCrawlerMTA.Logger.Info;
+import WebCrawlerMTA.Logger.Logger;
+import WebCrawlerMTA.Logger.Severe;
 import WebCrawlerMTA.Permission.PermissionManager;
 import WebCrawlerMTA.Permission.PermissionManagerInterface;
 
@@ -52,6 +55,7 @@ public class Recursion {
         depth = inputData.getDepth();
         urlsList = inputData.getUrlsList();
         typeLimit= inputData.getTypeToCrawl();
+
     }
 
 
@@ -63,12 +67,14 @@ public class Recursion {
 
     private static String GetPage(String urlString)
     {
+        Logger loggerInfo = new Info();
+        Logger loggerSevere = new Severe();
         String result = "";
         try {
-            URL url = new URL( urlString);
+            URL url = new URL(urlString);
             URLConnection connection = url.openConnection();
             connection.connect();
-            //System.out.println("Internet is connected");
+            loggerInfo.LoggerInfo("Internet connect for:" + urlString);
 
             try {
                 BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -77,22 +83,17 @@ public class Recursion {
                     result += str;
                 }
                 in.close();
+            } catch (MalformedURLException e) {
+                System.out.println(e.getMessage());
+                loggerSevere.LoggerInfo(e.getMessage());
             }
-            catch (MalformedURLException e) {
-            }
-            catch (IOException e) {
-            }
-            // System.out.println(result);
 
         } catch (MalformedURLException e) {
-            //System.out.println("Internet is not connected");
-           // System.out.println(e.getCause());
-            //logger + eroare e.getMessage()
+            System.out.println(e.getMessage());
+            loggerSevere.LoggerInfo(e.getMessage());
         } catch (IOException e) {
-            //System.out.println("Internet is not connected");
-            //logger + eroare e.getMessage()
-
-            //System.out.println(e.getCause());
+            System.out.println(e.getMessage());
+            loggerSevere.LoggerInfo(e.getMessage());
         }
         return result;
     }
@@ -125,7 +126,6 @@ public class Recursion {
         for(int i=0;i<threadsNumber;i++)
         {
             threads.get(i).start();
-            //System.out.println("Am inceput, semnat threadul: "+ i);
         }
     }
 
@@ -186,55 +186,32 @@ public class Recursion {
     }
 
     /**
-     * This method is used to verify the limit of an object
-     * @param url is a site
-     * @return the size of an object that will be downloaded
-     */
-
-    private static int GetFileSize(URL url) {
-        URLConnection conn = null;
-        try {
-            conn = url.openConnection();
-            if(conn instanceof HttpURLConnection) {
-                ((HttpURLConnection)conn).setRequestMethod("HEAD");
-            }
-            conn.getInputStream();
-            return conn.getContentLength();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if(conn instanceof HttpURLConnection) {
-                ((HttpURLConnection)conn).disconnect();
-            }
-        }
-    }
-
-
-    /**
      * This method is used to download some elements of a site
      * @param url is the url of the site
      */
 
     private static void DownloadPage(String url)
     {
-        Utils utils = new Utils();
-
+        Logger loggerSevere = new Severe();
         if(!typeLimit.isEmpty())
         {
             if(GetExtension(url).matches(typeLimit)){
                 try {
                     BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
                     int pos = url.indexOf("/");
+                    System.out.println("Saving file" + directoryPath + url.substring(pos+1));
+                    Logger logger = new Info();
+                    logger.LoggerInfo("Saving file" + directoryPath + url.substring(pos+1));
                     FileOutputStream fileOutputStream =
                             new FileOutputStream(directoryPath+url.substring(pos+1));
-                    System.out.println(directoryPath+url.substring(pos+1));
                     byte[] dataBuffer = new byte[1024];
                     int bytesRead;
                     while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
                         fileOutputStream.write(dataBuffer, 0, bytesRead);
                     }
                 } catch (IOException e) {
-                    //System.out.println(e.getCause());
+                    System.out.println(e.getMessage());
+                    loggerSevere.LoggerInfo(e.getMessage());
                 }
             }
         }
@@ -244,14 +221,17 @@ public class Recursion {
                 int pos = url.indexOf("/");
                 FileOutputStream fileOutputStream =
                         new FileOutputStream(directoryPath+url.substring(pos+1));
-                System.out.println(directoryPath+url.substring(pos+1));
+                System.out.println("Saving file" + directoryPath + url.substring(pos+1));
+                Logger logger = new Info();
+                logger.LoggerInfo("Saving file" + directoryPath + url.substring(pos+1));
                 byte[] dataBuffer = new byte[1024];
                 int bytesRead;
                 while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
                     fileOutputStream.write(dataBuffer, 0, bytesRead);
                 }
             } catch (IOException e) {
-                //System.out.println(e.getCause());
+                System.out.println(e.getMessage());
+                loggerSevere.LoggerInfo(e.getMessage());
             }
         }
     }
@@ -263,6 +243,10 @@ public class Recursion {
      * @param queueURLs is a List that is storing all the urls of a page
      */
     public static void GoRecursion(Integer currentDepth, Integer positionURL, List<String> queueURLs){
+
+        Logger loggerSevere = new Severe();
+        Logger loggerInfo = new Info();
+
         if(currentDepth > depth)
             return;
         if(!queueURLs.isEmpty()){
@@ -270,7 +254,9 @@ public class Recursion {
             permissionManagerInterface= new PermissionManager();
             String element = queueURLs.get(0);
             permissionManagerInterface.GetPermissions(element + "/robots.txt");
+            loggerInfo.LoggerInfo("Checking robots.txt for:"+element);
             String page = GetPage(element);
+            loggerInfo.LoggerInfo("Getting page data for:"+element);
             int a=0;
             while(a!= -1)
             {
@@ -279,8 +265,6 @@ public class Recursion {
                 {
                     break;
                 }
-                //System.out.print(a);
-                //System.out.print("\n");
                 String newURL = new String();
                 char b=' ';
                 a+=6;
@@ -297,6 +281,7 @@ public class Recursion {
                 {
                     if(permissionManagerInterface.AllowedToCrawl(newURL))
                     {
+                        loggerInfo.LoggerInfo("Getting permissions for:"+newURL);
                         int delayToSleep = Integer.parseInt(delay.substring(0,delay.length()-2));
                         if(permissionManagerInterface.GetDelay(newURL) != null)
                         {
@@ -305,20 +290,18 @@ public class Recursion {
                         try {
                             TimeUnit.SECONDS.sleep(delayToSleep/1000);
                         } catch (InterruptedException e) {
-                            e.printStackTrace();
+                            System.out.println(e.getMessage());
+                            loggerSevere.LoggerInfo(e.getMessage());
                         }
 
                         try {
                             Path path = Paths.get(directoryPath + GetDirectory(newURL));
                             Files.createDirectories(path);
                             DownloadPage(newURL);
-
-                            //System.out.println("Directory is created!");
-
+                            loggerInfo.LoggerInfo("Directory created for:"+GetDirectory(newURL));
                         } catch (IOException e) {
-
-                            //System.err.println("Failed to create directory!" + e.getMessage());
-
+                            System.err.println(e.getMessage());
+                            loggerSevere.LoggerInfo(e.getMessage());
                         }
                     }
                     queueURLs.remove(0);
@@ -331,13 +314,10 @@ public class Recursion {
         else{
             if(positionURL!=-1) {
                 queueURLs.add(urlsList.get(positionURL));
-                //System.out.println(urlsList.get(positionURL));
                 GoRecursion(currentDepth + 1, -1, queueURLs);
             }
         }
 
     }
-
-
 }
 

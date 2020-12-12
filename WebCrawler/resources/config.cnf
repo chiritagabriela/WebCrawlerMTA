@@ -1,6 +1,5 @@
 n_threads=50
 delay=100ms
 root_dir=C:/Users/gabri/Desktop/CrawlerDownload
-log_level=3
+log_level=5
 depth=4
-type_to_crawl=jpg

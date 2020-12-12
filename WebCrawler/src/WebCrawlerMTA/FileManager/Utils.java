@@ -1,5 +1,8 @@
 package WebCrawlerMTA.FileManager;
 
+import WebCrawlerMTA.Logger.Logger;
+import WebCrawlerMTA.Logger.Warn;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -90,7 +93,9 @@ public class Utils {
             Date date = new SimpleDateFormat("dd/MM/yyyy").parse(dateTime);
             return date;
         } catch (ParseException ex) {
-            System.out.println("Data nu a putut fi parsata");
+            System.out.println("Date is not in the correct format.");
+            Logger logger = new Warn();
+            logger.LoggerInfo("Date is not in the correct format for filtering.");
         }
         return null;
     }

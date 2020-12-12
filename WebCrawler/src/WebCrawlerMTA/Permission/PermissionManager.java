@@ -1,5 +1,8 @@
 package WebCrawlerMTA.Permission;
 
+import WebCrawlerMTA.Logger.Logger;
+import WebCrawlerMTA.Logger.Severe;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -79,11 +82,11 @@ public class PermissionManager implements PermissionManagerInterface {
     @Override
     public void GetPermissions(String urlString) {
         this.permissionsList.clear();
+        Logger loggerSevere = new Severe();
         try {
             URL url = new URL(urlString);
             URLConnection connection = url.openConnection();
             connection.connect();
-            //System.out.println("Internet is connected");
             try {
                 BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
                 String str;
@@ -121,21 +124,25 @@ public class PermissionManager implements PermissionManagerInterface {
             }
             catch (MalformedURLException e)
             {
-               // System.out.println(e.getMessage());
+               System.out.println(e.getMessage());
+               loggerSevere.LoggerInfo(e.getMessage());
             }
             catch (IOException e)
             {
-                //System.out.println(e.getMessage());
+                System.out.println(e.getMessage());
+                loggerSevere.LoggerInfo(e.getMessage());
             }
 
         }
         catch (MalformedURLException e)
         {
-           // System.out.println(e.getMessage());
+            System.out.println(e.getMessage());
+            loggerSevere.LoggerInfo(e.getMessage());
         }
         catch (IOException e)
         {
-           // System.out.println(e.getMessage());
+            System.out.println(e.getMessage());
+            loggerSevere.LoggerInfo(e.getMessage());
         }
     }
 
