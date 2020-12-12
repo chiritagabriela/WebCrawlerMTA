@@ -13,9 +13,7 @@ import java.nio.file.attribute.FileTime;
 import java.text.CharacterIterator;
 import java.text.DecimalFormat;
 import java.text.StringCharacterIterator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
 
 /**
  * Class implementing the FilterManager interface.
@@ -30,7 +28,7 @@ public class Filter implements FileManager {
      */
     private String filterProperty;
     private String filterValue;
-
+    List<File> allFoldersFiles;
     /**
      * Filter class constructor
      * Initializes the newly created object
@@ -38,6 +36,7 @@ public class Filter implements FileManager {
     public Filter() {
         this.filterProperty = "";
         this.filterValue = "";
+        allFoldersFiles = new ArrayList<File>();
     }
 
     /**
@@ -50,23 +49,43 @@ public class Filter implements FileManager {
         this.filterValue = filterValue;
     }
 
+    /**
+     * Method GetAllFiles sets list of all directories and subdirectories
+     * files, using recursion
+     * @param directoryName represents root directory
+     * @param files represents list of all saved files
+     */
+    private void GetAllFiles(String directoryName, List<File> files) {
+        File directory = new File(directoryName);
+
+        // Get all files from a directory.
+        File[] fList = directory.listFiles();
+        if (fList != null)
+            for (File file : fList) {
+                if (file.isFile()) {
+                    files.add(file);
+                } else if (file.isDirectory()) {
+                    GetAllFiles(file.getAbsolutePath(), files);
+                }
+            }
+    }
 
     /**
      * Method FilterByType is used to list all files that satisfy the specified filter
      * @param extension represents filter who has to be satisfied
      */
-    private FilenameFilter FilterByType(String extension) {
-        FilenameFilter textFilefilter = new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                String lowercaseName = name.toLowerCase();
-                if (lowercaseName.endsWith("."+extension)) {
-                    return true;
-                } else {
-                    return false;
-                }
+    private ArrayList<String> FilterByType(final String path,final String extension) {
+        this.allFoldersFiles.clear();
+        this.GetAllFiles(path, this.allFoldersFiles);
+        ArrayList<String> filesToList = new ArrayList<String>();
+        //List of all the text files
+        for (int i = 0; i < this.allFoldersFiles.size(); i++) {
+            String fileWithPath = allFoldersFiles.get(i).getAbsolutePath().toLowerCase();
+            if (fileWithPath.endsWith("." + this.filterValue)) {
+                filesToList.add(allFoldersFiles.get(i).getAbsolutePath());
             }
-        };
-        return textFilefilter;
+        }
+        return filesToList;
     }
 
     /**
@@ -85,32 +104,32 @@ public class Filter implements FileManager {
         SI = utilFunction.SplitString(" ", filterValue)[1].toUpperCase();
         int sizeInKB = utilFunction.ConvertToKB(SI, size);
 
-        File fileList[] = dirPath.listFiles();
-        File generatedList[] = new File[fileList.length];
-        for (File file : fileList) {
+        this.allFoldersFiles.clear();
+        this.GetAllFiles(path, this.allFoldersFiles);
+        //List of all the text files
+        for (File file : this.allFoldersFiles) {
             int fileSize = Integer.parseInt(utilFunction.SplitString(" ", utilFunction.ReadableFileSize(file.length()))[0]);
             if (fileSize < sizeInKB)
-
-                fileToPrint.add(file.getName() + " " + utilFunction.ReadableFileSize(file.length()));
+                fileToPrint.add(file.getAbsolutePath() + " " + utilFunction.ReadableFileSize(file.length()));
         }
-
         return fileToPrint;
-
     }
 
 
     /**
      * Method FilterByDate returns an ArrayList of Strings, containing names of files,
      * filtered by date
-     * @param files indicates the array of files we are filtering
-     * @param pathDirectory indicates the path of folder whose files we are filtering
+     * @param path indicates the path of folder whose files we are filtering
      */
-    private ArrayList<String> FilterByDate(final File files[], final File pathDirectory) {
+    private ArrayList<String> FilterByDate(final String path) {
         Utils utilFunction = new Utils();
         ArrayList<String> fileToPrint = new ArrayList<String>();
         try {
-            for (File file : files) {
-                Path filePath = Paths.get(pathDirectory + "\\" + file.getName());
+            this.allFoldersFiles.clear();
+            this.GetAllFiles(path, this.allFoldersFiles);
+            //List of all the text files
+            for (File file : this.allFoldersFiles){
+                Path filePath = Paths.get(file.getAbsolutePath());
 
                 BasicFileAttributes attr = Files.readAttributes(filePath, BasicFileAttributes.class);
                 FileTime fileTime = attr.creationTime();
@@ -142,20 +161,16 @@ public class Filter implements FileManager {
         SetFilterProperties(utilFunction.SplitString("#", property)[0], utilFunction.SplitString("#", property)[1]);
         switch (this.filterProperty) {
             case "type":
-                File directoryPath = new File(path);
-                FilenameFilter textFilefilter = FilterByType(this.filterValue);
-                //List of all the text files
-                String filesList[] = directoryPath.list(textFilefilter);
-                if(filesList.length == 0 )
-                    System.out.println("Nu exista fisiere de tip " + this.filterValue + "in directorul specificat!");
+                ArrayList<String> filesToList = this.FilterByType(path,this.filterValue);
+                if (filesToList.size() == 0)
+                    System.out.println("There are no files with the specified extension " + this.filterValue + "!");
                 else {
-                    System.out.println("List of the " + this.filterValue + " in the specified directory:");
-                    for (String fileName : filesList) {
+                    System.out.println("List of the " + this.filterValue + " files in the specified directory:");
+                    for (String fileName : filesToList) {
                         System.out.println(fileName);
                     }
                 }
                 break;
-
 
             case "size":
                 filesToPrint = FilterBySize(path);
@@ -172,9 +187,7 @@ public class Filter implements FileManager {
                 break;
 
             case "date":
-                File pathDirectory = new File(path);
-                File files[] = pathDirectory.listFiles();
-                filesToPrint = FilterByDate(files, pathDirectory);
+                filesToPrint = FilterByDate(path);
                 contor = filesToPrint.size();
                 if (contor == 0)
                     System.out.println("Nu exista fisiere descarcate inainte de data " + this.filterValue + "!");
