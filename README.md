@@ -2,17 +2,22 @@
 
 The software is designed to provide basic functionality of a Web Crawler. A web crawler is an Internet bot that helps index the Web. 
 These crawls one page at a time through a website, until all of the pages have been indexed.
-At the end of downloading the resources, the user will be informed about the success rate of the download and will have many methods of data analysis: filtering data by type, searching by keywords, limiting the download size, creating a sitemap.
+At the end of downloading the resources, the user will be informed about the success rate of the download and will have many methods of data analysis: 
 
-## SRS &SDD
+:trident: filtering data by type,dimension and date;
+:trident: searching by keywords;
+:trident: creating a sitemap;
+
+## SRS & SDD
 
 To see details about the Software Requirements Specification access the link:[SRS]().
 To see details about the Software Design Description access the link:[SDD]().
 
 ## How to use application? :computer: :keyboard:
 Set crawling configuration file
-bash
+```bash
 crawl config.cnf
+```
 
 Crawling sites from a given input file
 bash
