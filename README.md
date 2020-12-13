@@ -1,6 +1,6 @@
 # Web Crawler :spider: :spider_web:
-
-The software is designed to provide basic functionality of a Web Crawler. A web crawler is an Internet bot that helps index the Web.These crawls one page at a time through a website, until all of the pages have been indexed.<br/>
+https://img.shields.io/github/issues/chiritagabriela/WebCrawlerMTA
+The software is designed to provide basic functionality of a Web Crawler. A web crawler is an Internet bot that helps at web indexing.These crawls one page at a time through a website, until all of the pages have been indexed.<br/>
 At the end of downloading the resources, the user will be informed about the success rate of the download and will have many methods of data analysis: 
 
 :trident: filtering data by type,dimension and date;<br/>
@@ -9,8 +9,8 @@ At the end of downloading the resources, the user will be informed about the suc
 
 ## SRS & SDD
 
-To see details about the <strong>Software Requirements Specification</strong> access the link:[]().<br/>
-To see details about the <strong>Software Design Description</strong> access the link:[https://github.com/chiritagabriela/WebCrawlerMTA/blob/master/SDD_C114D_Grupa1.pdf]().<br/>
+To see details about the <strong>Software Requirements Specification</strong> access the link:[SRS](https://github.com/chiritagabriela/WebCrawlerMTA/blob/master/SRS_C114D_Grupa1.pdf).<br/>
+To see details about the <strong>Software Design Description</strong> access the link [SDD](https://github.com/chiritagabriela/WebCrawlerMTA/blob/master/SDD_C114D_Grupa1.pdf]).<br/>
 
 ## How to use application? :computer: :keyboard:
 Set crawling configuration file
