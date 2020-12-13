@@ -1,5 +1,6 @@
 # Web Crawler :spider: :spider_web:
 <a href="https://github.com/badges/shields"><img src="https://img.shields.io/github/issues/chiritagabriela/WebCrawlerMTA" alt="Star on GitHub"></a>
+<a href="https://github.com/badges/shields"><img src="https://img.shields.io/github/issues/chiritagabriela/WebCrawlerMTA?color=blue&label=MTAWebCrawl" alt="Star on GitHub"></a>
 
 The software is designed to provide basic functionality of a Web Crawler. A web crawler is an Internet bot that helps at web indexing.These crawls one page at a time through a website, until all of the pages have been indexed.<br/>
 At the end of downloading the resources, the user will be informed about the success rate of the download and will have many methods of data analysis: 
