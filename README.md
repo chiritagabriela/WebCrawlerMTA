@@ -12,7 +12,7 @@ At the end of downloading the resources, the user will be informed about the suc
 ## SRS & SDD
 
 To see details about the <strong>Software Requirements Specification</strong> access the link:[SRS](https://github.com/chiritagabriela/WebCrawlerMTA/blob/master/SRS_C114D_Grupa1.pdf).<br/>
-To see details about the <strong>Software Design Description</strong> access the link [SDD](https://github.com/chiritagabriela/WebCrawlerMTA/blob/master/SDD_C114D_Grupa1.pdf]).<br/>
+To see details about the <strong>Software Design Description</strong> access the link [SDD](https://github.com/chiritagabriela/WebCrawlerMTA/blob/master/SDD_C114D_Grupa1.pdf).<br/>
 
 ## How to use application? :computer: :keyboard:
 Set crawling configuration file
