@@ -193,7 +193,7 @@ public class Recursion {
     private static void DownloadPage(String url)
     {
         Logger loggerSevere = new Severe();
-        if(!typeLimit.isEmpty())
+        if(typeLimit != null)
         {
             if(GetExtension(url).matches(typeLimit)){
                 try {
