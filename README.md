@@ -53,7 +53,7 @@ Exit
 exit
 ```
 ## Testing
-In order to use the application, please make sure you first see the <strong>testing documentation</strong> [Testing](https://github.com/chiritagabriela/WebCrawlerMTA/blob/master/TestareAplicatie_C114D_Grupa1.docx)
+In order to use the application, please make sure you first see the <strong>testing documentation</strong> [Testing](https://github.com/chiritagabriela/WebCrawlerMTA/blob/master/TestareAplicatie_C114D_Grupa1.pdf)
 
 ## Team
 Andrei Claudia :woman_student:
